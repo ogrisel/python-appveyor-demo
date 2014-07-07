@@ -20,7 +20,7 @@ Continous integration setup with appveyor.com
 ---------------------------------------------
 
 The `appveyor.yml` file in this repo configures a Windows build environment for
-both for 32 bit and 64 bit Python 3 compiled extensions. This demo project is
+both for 32 bit and 64 bit Python compiled extensions. This demo project is
 configured to trigger build jobs at:
 
   http://ci.appveyor.com/project/ogrisel/python-appveyor-demo
@@ -33,10 +33,8 @@ The `appveyor/setup_build_evn.cmd` batch script optionally configures
 environment variables to activate the 64 bits MSVC++ compiler from the Windows
 SDK.
 
-Note: only the version 7.1 of the Windows SDK is installed on the appveyor
-worker at the time of writing. This  means that it is currently not possible to
-build extensions binary compatible with Python 2.7. This current setup only
-works for Python 3 packages.
+Note: work is still need to add support for 64bit Python 2.7 build. This
+is a known limitation of the current configuration. Stay tuned.
 
 The content of the `dist/` folder (typically hosting the generated `.whl`
 packages) is archived in the build report (see previous link).
