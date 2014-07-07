@@ -25,8 +25,8 @@ configured to trigger build jobs at:
 
   http://ci.appveyor.com/project/ogrisel/python-appveyor-demo
 
-In particular the `appveyor/install.ps1` powershell scripts download and
-install Python and and pip to grab all the development dependencies of the
+In particular the `appveyor/install.ps1` powershell script downloads and
+installs Python and and pip to grab all the development dependencies of the
 project as registered in the `dev-requirements.txt` file.
 
 The `appveyor/setup_build_evn.cmd` batch script optionally configures
