@@ -1,11 +1,11 @@
 python-appveyor-demo
 ====================
 
-Demo project for building [Python wheels](http://pythonwheels.com/) for Windows
-with appveyor.com.
+Demo project for building Windows [Python wheels](http://pythonwheels.com/)
+using http://appveyor.com.
 
-Appveyor is a continuous integration platform similar to travis-ci.org but for
-the Windows platform. Appveyor is free for Open Source projects and runs on the
+AppVeyor is a continuous integration platform similar to travis-ci.org but for
+the Windows platform. AppVeyor is free for Open Source projects and runs on the
 Microsoft Azure cloud infrastructure.
 
 This sample Python project has a simple C compiled extension (statically
@@ -16,8 +16,8 @@ This project is meant to document a minimalistic yet working example to help
 other Python project maintainers.
 
 
-Continous integration setup with appveyor.com
----------------------------------------------
+Continous integration setup with AppVeyor
+-----------------------------------------
 
 The `appveyor.yml` file in this repo configures a Windows build environment for
 both for 32 bit and 64 bit Python compiled extensions. This demo project is
@@ -25,16 +25,18 @@ configured to trigger build jobs at:
 
   http://ci.appveyor.com/project/ogrisel/python-appveyor-demo
 
-In particular the `appveyor/install.ps1` powershell script downloads and
-installs Python and and pip to grab all the development dependencies of the
-project as registered in the `dev-requirements.txt` file.
+In particular:
 
-The `appveyor/setup_build_evn.cmd` batch script optionally configures
-environment variables to activate the 64 bits MSVC++ compiler from the Windows
-SDK.
+  - the `appveyor/select_sdk.ps1` powershell script determines which Windows
+    SDK should be used for a given combination of Python version and architecture.
 
-Note: work is still need to add support for 64bit Python 2.7 build. This
-is a known limitation of the current configuration. Stay tuned.
+  - the `appveyor/install.ps1` powershell script downloads and
+    installs Python and and pip to grab all the development dependencies of the
+    project as registered in the `dev-requirements.txt` file.
+
+  - the `appveyor/setup_build_evn.cmd` batch script optionally configures
+    environment variables to activate the 64 bit MSVC++ compiler from the
+    Windows SDK matching the Python version.
 
 The content of the `dist/` folder (typically hosting the generated `.whl`
 packages) is archived in the build report (see previous link).
@@ -64,7 +66,18 @@ Finally run the tests (from any folder by the source tree):
 
     nosetests -v pyappveyordemo
 
-Under Windows you might to install the Windows SDK to build the compiled
+Under Windows will need a Windows SDK to build the compiled
 extension with the MSVC++ compilers. See the following for details:
 
   https://github.com/cython/cython/wiki/64BitCythonExtensionsOnWindows
+
+
+Credits
+-------
+
+Thanks to Feodor Fitsner (@FeodorFitsner) from AppVeyor for the fast support
+and for installing the old versions of the Windows SDK required to build
+Python projects.
+
+Thanks to Thomas Conté (@tomconte) from Microsoft for your help in scripting
+Windows SDKs and MSVC build environments usage.
