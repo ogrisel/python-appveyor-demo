@@ -2,7 +2,8 @@ python-appveyor-demo
 ====================
 
 Demo project for building Windows [Python wheels](http://pythonwheels.com/)
-using http://appveyor.com.
+using http://appveyor.com. It supports both Python 2 and 3 on 32 and 64 bit
+architectures.
 
 AppVeyor is a continuous integration platform similar to travis-ci.org but for
 the Windows platform. AppVeyor is free for Open Source projects and runs on the
@@ -27,16 +28,13 @@ configured to trigger build jobs at:
 
 In particular:
 
-  - the `appveyor/select_sdk.ps1` powershell script determines which Windows
-    SDK should be used for a given combination of Python version and architecture.
-
   - the `appveyor/install.ps1` powershell script downloads and
     installs Python and and pip to grab all the development dependencies of the
     project as registered in the `dev-requirements.txt` file.
 
-  - the `appveyor/setup_build_evn.cmd` batch script optionally configures
-    environment variables to activate the 64 bit MSVC++ compiler from the
-    Windows SDK matching the Python version.
+  - the `appveyor/run_in_env.cmd` batch script configures environment variables
+    to activate the MSVC++ compiler from the Windows SDK matching the Python
+    version and architecture.
 
 The content of the `dist/` folder (typically hosting the generated `.whl`
 packages) is archived in the build report (see previous link).
