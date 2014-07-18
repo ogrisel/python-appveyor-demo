@@ -6,28 +6,27 @@ environment:
     CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_env.cmd"
 
   matrix:
-    - PYTHON: "C:\\Python27_32"
-      PYTHON_VERSION: "2.7.8"
+    - PYTHON: "C:\\Miniconda27_32"
+      PYTHON_VERSION: "2.7"
       PYTHON_ARCH: "32"
 
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.8"
+    - PYTHON: "C:\\Miniconda27"
+      PYTHON_VERSION: "2.7"
       PYTHON_ARCH: "64"
 
-    - PYTHON: "C:\\Python34_32"
-      PYTHON_VERSION: "3.4.1"
+    - PYTHON: "C:\\Miniconda34_32"
+      PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "32"
 
-    - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4.1"
+    - PYTHON: "C:\\Miniconda34"
+      PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
 
 install:
   - ECHO "Installed SDKs:"
   - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
 
-  # Install Python (from the official .msi of http://python.org) and pip when
-  # not already installed.
+  # Install Miniconda and pip from Continuum Analytics repository.
   - "powershell ./appveyor/install.ps1"
 
   # Prepend newly installed Python to the PATH of this build (this cannot be
@@ -38,6 +37,10 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+  # Install packages using conda. Anything installed with conda will not
+  # be installed by pip in the next step.
+  #- "%CMD_IN_ENV% conda install --yes -q nose"
 
   # Install the build dependencies of the project. If some dependencies contain
   # compiled extensions and are not provided as pre-built wheel packages,
