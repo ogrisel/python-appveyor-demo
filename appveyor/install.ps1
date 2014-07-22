@@ -1,9 +1,9 @@
-# Sample script to install Miniconda and pip under Windows
+# Sample script to install Python and pip under Windows
 # Authors: Olivier Grisel, Jonathan Helmus and Kyle Kastner
 # License: CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/
 
 $MINICONDA_URL = "http://repo.continuum.io/miniconda/"
-$BASE_URL = "http://repo.continuum.io/miniconda/"
+$BASE_URL = "https://www.python.org/ftp/python/"
 $GET_PIP_URL = "https://bootstrap.pypa.io/get-pip.py"
 $GET_PIP_PATH = "C:\get-pip.py"
 
