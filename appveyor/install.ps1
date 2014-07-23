@@ -73,6 +73,11 @@ function InstallPython ($python_version, $architecture, $python_home) {
     }
 }
 
+function RunCommand ($command, $command_args) {
+    Write-Host $command $command_args
+    Start-Process -FilePath $command -ArgumentList $command_args -Wait -Passthru
+}
+
 
 function InstallPip ($python_home) {
     $pip_path = $python_home + "\Scripts\pip.exe"
