@@ -52,12 +52,18 @@ function InstallPython ($python_version, $architecture, $python_home) {
     } else {
         $platform_suffix = ".amd64"
     }
-    $filepath = DownloadPython $python_version $platform_suffix
-    Write-Host "Installing" $filepath "to" $python_home
+    $msipath = DownloadPython $python_version $platform_suffix
+    Write-Host "Installing" $msipath "to" $python_home
     $install_log = $python_home + ".log"
-    $args = "/qn  /log $install_log /i $filepath TARGETDIR=$python_home"
-    Write-Host "msiexec.exe" $args
-    Start-Process -FilePath "msiexec.exe" -ArgumentList $args -Wait -Passthru
+    $install_args = "/qn  /log $install_log /i $msipath TARGETDIR=$python_home"
+    $uninstall_args = "/qn  /log $install_log /x $msipath"
+    RunCommand "msiexec.exe" $install_args
+    if (-not(Test-Path $python_home)) {
+        # Try to uninstall any pre-installed python and re-install at the
+        # expected location
+        RunCommand "msiexec.exe" $uninstall_args
+        RunCommand "msiexec.exe" $install_args
+    }
     if (Test-Path $python_home) {
         Write-Host "Python $python_version ($architecture) installation complete"
     } else {
@@ -65,6 +71,11 @@ function InstallPython ($python_version, $architecture, $python_home) {
         Get-Content -Path $install_log
         Exit 1
     }
+}
+
+function RunCommand($command, $args) {
+    Write-Host $command $args
+    Start-Process -FilePath $command -ArgumentList $args -Wait -Passthru
 }
 
 
