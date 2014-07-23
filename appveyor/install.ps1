@@ -72,9 +72,9 @@ function InstallPython ($python_version, $architecture, $python_home) {
     }
 }
 
-function RunCommand ($command, $args) {
-    Write-Host $command $args
-    Start-Process -FilePath $command -ArgumentList $args -Wait -Passthru
+function RunCommand ($command, $command_args) {
+    Write-Host $command $command_args
+    Start-Process -FilePath $command -ArgumentList $command_args -Wait -Passthru
 }
 
 
@@ -91,6 +91,7 @@ function InstallPip ($python_home) {
         Write-Host "pip already installed."
     }
 }
+
 
 function main () {
     InstallPython $env:PYTHON_VERSION $env:PYTHON_ARCH $env:PYTHON
