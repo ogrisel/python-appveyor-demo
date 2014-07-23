@@ -55,12 +55,11 @@ function InstallPython ($python_version, $architecture, $python_home) {
     $msipath = DownloadPython $python_version $platform_suffix
     Write-Host "Installing" $msipath "to" $python_home
     $install_log = $python_home + ".log"
-    $install_args = "/qn  /log $install_log /i $msipath TARGETDIR=$python_home"
-    $uninstall_args = "/qn  /log $install_log /x $msipath"
+    $install_args = "/qn /log $install_log /i $msipath TARGETDIR=$python_home"
+    $uninstall_args = "/qn /x $msipath"
     RunCommand "msiexec.exe" $install_args
     if (-not(Test-Path $python_home)) {
-        # Try to uninstall any pre-installed python and re-install at the
-        # expected location
+        Write-Host "Python seems to be installed else-where, reinstalling."
         RunCommand "msiexec.exe" $uninstall_args
         RunCommand "msiexec.exe" $install_args
     }
@@ -73,7 +72,7 @@ function InstallPython ($python_version, $architecture, $python_home) {
     }
 }
 
-function RunCommand($command, $args) {
+function RunCommand ($command, $args) {
     Write-Host $command $args
     Start-Process -FilePath $command -ArgumentList $args -Wait -Passthru
 }
