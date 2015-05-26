@@ -67,7 +67,7 @@ Finally run the tests (from any folder by the source tree):
 Under Windows will need a Windows SDK to build the compiled
 extension with the MSVC++ compilers. See the following for details:
 
-  https://github.com/cython/cython/wiki/64BitCythonExtensionsOnWindows
+  https://github.com/cython/cython/wiki/CythonExtensionsOnWindows
 
 
 Credits
