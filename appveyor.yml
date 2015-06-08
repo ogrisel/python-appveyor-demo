@@ -30,6 +30,13 @@ environment:
       PYTHON_VERSION: "3.4.1"
       PYTHON_ARCH: "64"
 
+    # Also test a Python version not pre-installed
+    # See: https://github.com/ogrisel/python-appveyor-demo/issues/10
+
+    - PYTHON: "C:\\Python266"
+      PYTHON_VERSION: "2.6.6"
+      PYTHON_ARCH: "32"
+
 install:
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
