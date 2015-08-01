@@ -34,11 +34,16 @@ environment:
       PYTHON_VERSION: "3.4.x" # currently 3.4.3
       PYTHON_ARCH: "64"
 
-    # Also test a Python version not pre-installed
-    # See: https://github.com/ogrisel/python-appveyor-demo/issues/10
+    # Python 2.6.6 is the only Python 2.6 version that can be installed
+    # without installing extra dependencies. See:
+    # https://github.com/ogrisel/python-appveyor-demo/issues/10
 
     - PYTHON: "C:\\Python266"
       PYTHON_VERSION: "2.6.6"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python265"
+      PYTHON_VERSION: "2.6.5"
       PYTHON_ARCH: "32"
 
 install:
@@ -56,6 +61,10 @@ install:
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+  # pip on Python 2.6.5 fails unless ndg-httpsclient is installed.
+  # ndg-httpsclient will also install PyOpenSSL, pyasn1, and others
+  - ps: if ([version]$env:PYTHON_VERSION -lt [version]"2.6.6") { & pip.exe --trusted-host pypi.python.org install ndg-httpsclient 2>$null }
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
