@@ -64,7 +64,7 @@ install:
 
   # pip on Python 2.6.5 fails unless ndg-httpsclient is installed.
   # ndg-httpsclient will also install PyOpenSSL, pyasn1, and others
-  - ps: if ([version]$env:PYTHON_VERSION -lt [version]"2.6.6") { & pip.exe --trusted-host pypi.python.org install ndg-httpsclient 2>$null }
+  - ps: if ([version](($env:PYTHON_VERSION).replace('.x', '')) -lt [version]"2.6.6") { & pip.exe --trusted-host pypi.python.org install ndg-httpsclient 2>$null }
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
