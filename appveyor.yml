@@ -7,6 +7,16 @@ environment:
 
   matrix:
 
+    # Python 2.7.10 is the latest version and is not pre-installed.
+
+    - PYTHON: "C:\\Python27.10"
+      PYTHON_VERSION: "2.7.10"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python27.10-x64"
+      PYTHON_VERSION: "2.7.10"
+      PYTHON_ARCH: "64"
+
     # Pre-installed Python versions, which Appveyor may upgrade to
     # a later point release.
 
@@ -60,6 +70,10 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+  # Upgrade to the latest version of pip to avoid it displaying warnings
+  # about it being out of date.
+  - "pip install --disable-pip-version-check --user --upgrade pip"
 
   # Install the build dependencies of the project. If some dependencies contain
   # compiled extensions and are not provided as pre-built wheel packages,
