@@ -8,14 +8,8 @@ $GET_PIP_URL = "https://bootstrap.pypa.io/get-pip.py"
 $GET_PIP_PATH = "C:\get-pip.py"
 
 
-function DownloadPython ($python_version, $platform_suffix) {
-    $version_obj = [version]$python_version
-    if ($version_obj -lt [version]'3.3.0' -and $version_obj.Build -eq 0) {
-        $python_version = "$($version_obj.Major).$($version_obj.Minor)"
-    }
+function Download ($filename, $url) {
     $webclient = New-Object System.Net.WebClient
-    $filename = "python-" + $python_version + $platform_suffix + ".msi"
-    $url = $BASE_URL + $python_version + "/" + $filename
 
     $basedir = $pwd.Path + "\"
     $filepath = $basedir + $filename
@@ -35,14 +29,26 @@ function DownloadPython ($python_version, $platform_suffix) {
         Catch [Exception]{
             Start-Sleep 1
         }
-   }
-   if (Test-Path $filepath) {
-       Write-Host "File saved at" $filepath
-   } else {
-       # Retry once to get the error message if any at the last try
-       $webclient.DownloadFile($url, $filepath)
-   }
-   return $filepath
+    }
+    if (Test-Path $filepath) {
+        Write-Host "File saved at" $filepath
+    } else {
+        # Retry once to get the error message if any at the last try
+        $webclient.DownloadFile($url, $filepath)
+    }
+    return $filepath
+}
+
+
+function DownloadPython ($python_version, $platform_suffix) {
+    $version_obj = [version]$python_version
+    if ($version_obj -lt [version]'3.3.0' -and $version_obj.Build -eq 0) {
+        $python_version = "$($version_obj.Major).$($version_obj.Minor)"
+    }
+    $filename = "python-" + $python_version + $platform_suffix + ".msi"
+    $url = $BASE_URL + $python_version + "/" + $filename
+    $filepath = Download $filename $url
+    return $filepath
 }
 
 
@@ -99,40 +105,14 @@ function InstallPip ($python_home) {
 
 
 function DownloadMiniconda ($python_version, $platform_suffix) {
-    $webclient = New-Object System.Net.WebClient
     if ($python_version -eq "3.4") {
         $filename = "Miniconda3-3.5.5-Windows-" + $platform_suffix + ".exe"
     } else {
         $filename = "Miniconda-3.5.5-Windows-" + $platform_suffix + ".exe"
     }
     $url = $MINICONDA_URL + $filename
-
-    $basedir = $pwd.Path + "\"
-    $filepath = $basedir + $filename
-    if (Test-Path $filename) {
-        Write-Host "Reusing" $filepath
-        return $filepath
-    }
-
-    # Download and retry up to 3 times in case of network transient errors.
-    Write-Host "Downloading" $filename "from" $url
-    $retry_attempts = 2
-    for($i=0; $i -lt $retry_attempts; $i++){
-        try {
-            $webclient.DownloadFile($url, $filepath)
-            break
-        }
-        Catch [Exception]{
-            Start-Sleep 1
-        }
-   }
-   if (Test-Path $filepath) {
-       Write-Host "File saved at" $filepath
-   } else {
-       # Retry once to get the error message if any at the last try
-       $webclient.DownloadFile($url, $filepath)
-   }
-   return $filepath
+    $filepath = Download $filename $url
+    return $filepath
 }
 
 
