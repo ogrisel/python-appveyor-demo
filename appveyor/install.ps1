@@ -7,6 +7,16 @@ $BASE_URL = "https://www.python.org/ftp/python/"
 $GET_PIP_URL = "https://bootstrap.pypa.io/get-pip.py"
 $GET_PIP_PATH = "C:\get-pip.py"
 
+$PYTHON_PRERELEASE_REGEX = @"
+(?x)
+(?<major>\d+)
+\.
+(?<minor>\d+)
+\.
+(?<micro>\d+)
+(?<prerelease>[a-z]{1,2}\d+)
+"@
+
 
 function Download ($filename, $url) {
     $webclient = New-Object System.Net.WebClient
@@ -40,13 +50,40 @@ function Download ($filename, $url) {
 }
 
 
-function DownloadPython ($python_version, $platform_suffix) {
-    $version_obj = [version]$python_version
-    if ($version_obj -lt [version]'3.3.0' -and $version_obj.Build -eq 0) {
-        $python_version = "$($version_obj.Major).$($version_obj.Minor)"
+function ParsePythonVersion ($python_version) {
+    if ($python_version -match $PYTHON_PRERELEASE_REGEX) {
+        return ([int]$matches.major, [int]$matches.minor, [int]$matches.micro,
+                $matches.prerelease)
     }
+    $version_obj = [version]$python_version
+    return ($version_obj.major, $version_obj.minor, $version_obj.build, "")
+}
+
+
+function DownloadPython ($python_version, $platform_suffix) {
+    $major, $minor, $micro, $prerelease = ParsePythonVersion $python_version
+
+    if (($major -le 2 -and $micro -eq 0) `
+        -or ($major -eq 3 -and $minor -le 2 -and $micro -eq 0) `
+        ) {
+        $dir = "$major.$minor"
+        $python_version = "$major.$minor$prerelease"
+    } else {
+        $dir = "$major.$minor.$micro"
+    }
+
+    if ($prerelease) {
+        if (($major -le 2) `
+            -or ($major -eq 3 -and $minor -eq 1) `
+            -or ($major -eq 3 -and $minor -eq 2) `
+            -or ($major -eq 3 -and $minor -eq 3) `
+            ) {
+            $dir = "$dir/prev"
+        }
+    }
+
     $filename = "python-" + $python_version + $platform_suffix + ".msi"
-    $url = $BASE_URL + $python_version + "/" + $filename
+    $url = "$BASE_URL/$dir/$filename"
     $filepath = Download $filename $url
     return $filepath
 }
