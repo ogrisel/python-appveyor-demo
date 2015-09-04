@@ -1,11 +1,21 @@
 # Sample script to install Python and pip under Windows
-# Authors: Olivier Grisel, Jonathan Helmus and Kyle Kastner
+# Authors: Olivier Grisel, Jonathan Helmus, Kyle Kastner, and Alex Willmer
 # License: CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/
 
 $MINICONDA_URL = "http://repo.continuum.io/miniconda/"
 $BASE_URL = "https://www.python.org/ftp/python/"
 $GET_PIP_URL = "https://bootstrap.pypa.io/get-pip.py"
 $GET_PIP_PATH = "C:\get-pip.py"
+
+$PYTHON_PRERELEASE_REGEX = @"
+(?x)
+(?<major>\d+)
+\.
+(?<minor>\d+)
+\.
+(?<micro>\d+)
+(?<prerelease>[a-z]{1,2}\d+)
+"@
 
 
 function Download ($filename, $url) {
@@ -40,13 +50,46 @@ function Download ($filename, $url) {
 }
 
 
-function DownloadPython ($python_version, $platform_suffix) {
-    $version_obj = [version]$python_version
-    if ($version_obj -lt [version]'3.3.0' -and $version_obj.Build -eq 0) {
-        $python_version = "$($version_obj.Major).$($version_obj.Minor)"
+function ParsePythonVersion ($python_version) {
+    if ($python_version -match $PYTHON_PRERELEASE_REGEX) {
+        return ([int]$matches.major, [int]$matches.minor, [int]$matches.micro,
+                $matches.prerelease)
     }
-    $filename = "python-" + $python_version + $platform_suffix + ".msi"
-    $url = $BASE_URL + $python_version + "/" + $filename
+    $version_obj = [version]$python_version
+    return ($version_obj.major, $version_obj.minor, $version_obj.build, "")
+}
+
+
+function DownloadPython ($python_version, $platform_suffix) {
+    $major, $minor, $micro, $prerelease = ParsePythonVersion $python_version
+
+    if (($major -le 2 -and $micro -eq 0) `
+        -or ($major -eq 3 -and $minor -le 2 -and $micro -eq 0) `
+        ) {
+        $dir = "$major.$minor"
+        $python_version = "$major.$minor$prerelease"
+    } else {
+        $dir = "$major.$minor.$micro"
+    }
+
+    if ($prerelease) {
+        if (($major -le 2) `
+            -or ($major -eq 3 -and $minor -eq 1) `
+            -or ($major -eq 3 -and $minor -eq 2) `
+            -or ($major -eq 3 -and $minor -eq 3) `
+            ) {
+            $dir = "$dir/prev"
+        }
+    }
+
+    if (($major -le 2) -or ($major -le 3 -and $minor -le 4)) {
+        $ext = "msi"
+    } else {
+        $ext = "exe"
+    }
+
+    $filename = "python-$python_version$platform_suffix.$ext"
+    $url = "$BASE_URL/$dir/$filename"
     $filepath = Download $filename $url
     return $filepath
 }
@@ -63,16 +106,14 @@ function InstallPython ($python_version, $architecture, $python_home) {
     } else {
         $platform_suffix = ".amd64"
     }
-    $msipath = DownloadPython $python_version $platform_suffix
-    Write-Host "Installing" $msipath "to" $python_home
+    $installer_path = DownloadPython $python_version $platform_suffix
+    $installer_ext = [System.IO.Path]::GetExtension($installer_path)
+    Write-Host "Installing $installer_path to $python_home"
     $install_log = $python_home + ".log"
-    $install_args = "/qn /log $install_log /i $msipath TARGETDIR=$python_home"
-    $uninstall_args = "/qn /x $msipath"
-    RunCommand "msiexec.exe" $install_args
-    if (-not(Test-Path $python_home)) {
-        Write-Host "Python seems to be installed else-where, reinstalling."
-        RunCommand "msiexec.exe" $uninstall_args
-        RunCommand "msiexec.exe" $install_args
+    if ($installer_ext -eq '.msi') {
+        InstallPythonMSI $installer_path $python_home $install_log
+    } else {
+        InstallPythonEXE $installer_path $python_home $install_log
     }
     if (Test-Path $python_home) {
         Write-Host "Python $python_version ($architecture) installation complete"
@@ -80,6 +121,24 @@ function InstallPython ($python_version, $architecture, $python_home) {
         Write-Host "Failed to install Python in $python_home"
         Get-Content -Path $install_log
         Exit 1
+    }
+}
+
+
+function InstallPythonEXE ($exepath, $python_home, $install_log) {
+    $install_args = "/quiet InstallAllUsers=1 TargetDir=$python_home"
+    RunCommand $exepath $install_args
+}
+
+
+function InstallPythonMSI ($msipath, $python_home, $install_log) {
+    $install_args = "/qn /log $install_log /i $msipath TARGETDIR=$python_home"
+    $uninstall_args = "/qn /x $msipath"
+    RunCommand "msiexec.exe" $install_args
+    if (-not(Test-Path $python_home)) {
+        Write-Host "Python seems to be installed else-where, reinstalling."
+        RunCommand "msiexec.exe" $uninstall_args
+        RunCommand "msiexec.exe" $install_args
     }
 }
 

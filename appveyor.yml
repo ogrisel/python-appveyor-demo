@@ -53,6 +53,10 @@ environment:
       PYTHON_VERSION: "2.6.6"
       PYTHON_ARCH: "32"
 
+    - PYTHON: "C:\\Python35rc2"
+      PYTHON_VERSION: "3.5.0rc2"
+      PYTHON_ARCH: "32"
+
     # Major and minor releases (i.e x.0.0 and x.y.0) prior to 3.3.0 use
     # a different naming scheme.
 
