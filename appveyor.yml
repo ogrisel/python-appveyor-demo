@@ -53,9 +53,17 @@ environment:
       PYTHON_VERSION: "2.6.6"
       PYTHON_ARCH: "32"
 
-    - PYTHON: "C:\\Python35rc2"
-      PYTHON_VERSION: "3.5.0rc2"
+    - PYTHON: "C:\\Python266-x64"
+      PYTHON_VERSION: "2.6.6"
+      PYTHON_ARCH: "64"
+
+    - PYTHON: "C:\\Python35rc4"
+      PYTHON_VERSION: "3.5.0rc4"
       PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python35rc4-x64"
+      PYTHON_VERSION: "3.5.0rc4"
+      PYTHON_ARCH: "64"
 
     # Major and minor releases (i.e x.0.0 and x.y.0) prior to 3.3.0 use
     # a different naming scheme.
@@ -63,6 +71,10 @@ environment:
     - PYTHON: "C:\\Python270"
       PYTHON_VERSION: "2.7.0"
       PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python270-x64"
+      PYTHON_VERSION: "2.7.0"
+      PYTHON_ARCH: "64"
 
 install:
   - ECHO "Filesystem root:"
