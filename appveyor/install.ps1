@@ -162,7 +162,7 @@ function InstallPip ($python_home) {
         $webclient = New-Object System.Net.WebClient
         $webclient.DownloadFile($GET_PIP_URL, $GET_PIP_PATH)
         Write-Host "Executing:" $python_path $GET_PIP_PATH
-        Start-Process -FilePath "$python_path" -ArgumentList "$GET_PIP_PATH" -Wait -Passthru
+        & $python_path $GET_PIP_PATH
     } else {
         Write-Host "pip already installed."
     }
