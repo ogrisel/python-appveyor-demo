@@ -17,7 +17,7 @@ This project is meant to document a minimalistic yet working example to help
 other Python project maintainers.
 
 
-Continous integration setup with AppVeyor
+Continuous integration setup with AppVeyor
 -----------------------------------------
 
 The `appveyor.yml` file in this repo configures a Windows build environment for
