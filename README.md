@@ -39,11 +39,12 @@ In particular:
 The content of the `dist/` folder (typically hosting the generated `.whl`
 packages) is archived in the build report (see previous link).
 
-**Note**: when registering your github repo on appveyor ci, don't forget to
-activate the "Rolling builds" option to automatically cancel build on intermediate
-push events to avoid clogging the build queue with useless jobs.
-
-![Rolling builds](https://www.dropbox.com/s/7ug7ynx7pxycay2/Screenshot%202015-10-30%2014.53.47.png?dl=1)
+**Note**: it is possible to activate the "Rolling builds" option to
+automatically cancel build on intermediate push events to avoid clogging
+the build queue with useless jobs. However it can be problematic as it can
+cancel builds triggered by direct push to master outside of any PR. Instead
+the `appveyor.yml` file of this repo uses a specific powershell snippet
+to quickly fail if a newer build is queued for the same PR.
 
 
 Building and testing locally from source
