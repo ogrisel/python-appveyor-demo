@@ -122,7 +122,7 @@ build_script:
 
 test_script:
   # Run the project tests
-  - "%CMD_IN_ENV% python setup.py nosetests"
+  - "%CMD_IN_ENV% python setup.py nosetests --with-coverage"
 
 after_test:
   # If tests are successful, create binary packages for the project.
@@ -131,9 +131,12 @@ after_test:
   - "%CMD_IN_ENV% python setup.py bdist_msi"
   - ps: "ls dist"
 
+  # Send the coverage data to codecov.io
+  - codecov
+
 artifacts:
   # Archive the generated packages in the ci.appveyor.com build report.
-  - path: dist\*
+  - path: dist\* .coverage coverage.xml
 
 #on_success:
 #  - TODO: upload the content of dist/*.whl to a public wheelhouse
