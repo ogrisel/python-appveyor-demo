@@ -2,7 +2,7 @@ python-appveyor-demo
 ====================
 
 Demo project for building Windows [Python wheels](http://pythonwheels.com/)
-using http://appveyor.com. It supports both Python 2 and 3 on 32 and 64 bit
+using https://appveyor.com. It supports both Python 2 and 3 on 32 and 64 bit
 architectures.
 
 AppVeyor is a continuous integration platform similar to travis-ci.org but for
@@ -24,7 +24,7 @@ The `appveyor.yml` file in this repo configures a Windows build environment for
 both for 32 bit and 64 bit Python compiled extensions. This demo project is
 configured to trigger build jobs at:
 
-  http://ci.appveyor.com/project/ogrisel/python-appveyor-demo
+  https://ci.appveyor.com/project/ogrisel/python-appveyor-demo
 
 In particular:
 
