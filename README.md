@@ -1,6 +1,8 @@
 python-appveyor-demo
 ====================
 
+[![AppVeyor](https://img.shields.io/appveyor/ci/ogrisel/python-appveyor-demo.svg)](https://ci.appveyor.com/project/ogrisel/python-appveyor-demo/history)
+
 Demo project for building Windows [Python wheels](http://pythonwheels.com/)
 using http://appveyor.com. It supports both Python 2 and 3 on 32 and 64 bit
 architectures.
