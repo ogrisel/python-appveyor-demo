@@ -123,7 +123,7 @@ build_script:
 test_script:
   # Run the project tests and upload results
   - ps: |
-      &$env:CMD_IN_ENV python setup.py nosetests --with-xunit
+      &$env:PYTHON\python setup.py nosetests --with-xunit
       if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       # upload results to AppVeyor
       $wc = New-Object 'System.Net.WebClient'
