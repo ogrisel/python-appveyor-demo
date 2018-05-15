@@ -8,6 +8,7 @@ environment:
   matrix:
 
     # Python 2.7.10 is the latest version and is not pre-installed.
+    # Python versions: https://www.appveyor.com/docs/build-environment/#python
 
     - PYTHON: "C:\\Python27.10"
       PYTHON_VERSION: "2.7.10"
