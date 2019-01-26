@@ -3,69 +3,47 @@ environment:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
     # See: http://stackoverflow.com/a/13751649/163740
-    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_env.cmd"
+    CMD_IN_ENV: cmd /E:ON /V:ON /C .\appveyor\run_with_env.cmd
 
   matrix:
 
-    # Python 2.7.10 is the latest version and is not pre-installed.
-    # Python versions: https://www.appveyor.com/docs/build-environment/#python
+    # Build images: https://www.appveyor.com/docs/build-environment/
+    # Python versions: https://www.appveyor.com/docs/windows-images-software/#python
+    # Legacy Python 2.7.15 is the latest version and is pre-installed.
 
-    - PYTHON: "C:\\Python27.10"
-      PYTHON_VERSION: "2.7.10"
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python27
+      PYTHON_VERSION: 2.7.x
+      PYTHON_ARCH: '32'
 
-    - PYTHON: "C:\\Python27.10-x64"
-      PYTHON_VERSION: "2.7.10"
-      PYTHON_ARCH: "64"
+    - PYTHON: C:\Python27-x64
+      PYTHON_VERSION: 2.7.x
+      PYTHON_ARCH: '64'
 
-    # Pre-installed Python versions, which Appveyor may upgrade to
-    # a later point release.
-    # See: http://www.appveyor.com/docs/installed-software#python
+    # Python versions, which Appveyor may upgrade to later point releases.
 
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.x" # currently 2.7.9
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python37
+      PYTHON_VERSION: 3.7.x
+      PYTHON_ARCH: '32'
 
-    - PYTHON: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x" # currently 2.7.9
-      PYTHON_ARCH: "64"
+    - PYTHON: C:\Python37-x64
+      PYTHON_VERSION: 3.7.x
+      PYTHON_ARCH: '64'
 
-    - PYTHON: "C:\\Python33"
-      PYTHON_VERSION: "3.3.x" # currently 3.3.5
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python36
+      PYTHON_VERSION: 3.6.x
+      PYTHON_ARCH: '32'
 
-    - PYTHON: "C:\\Python33-x64"
-      PYTHON_VERSION: "3.3.x" # currently 3.3.5
-      PYTHON_ARCH: "64"
+    - PYTHON: C:\Python36-x64
+      PYTHON_VERSION: 3.6.x
+      PYTHON_ARCH: '64'
 
-    - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4.x" # currently 3.4.3
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python35
+      PYTHON_VERSION: 3.5.x
+      PYTHON_ARCH: '32'
 
-    - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4.x" # currently 3.4.3
-      PYTHON_ARCH: "64"
-
-    # Python versions not pre-installed
-
-    # Python 2.6.6 is the latest Python 2.6 with a Windows installer
-    # See: https://github.com/ogrisel/python-appveyor-demo/issues/10
-
-    - PYTHON: "C:\\Python266"
-      PYTHON_VERSION: "2.6.6"
-      PYTHON_ARCH: "32"
-
-    - PYTHON: "C:\\Python266-x64"
-      PYTHON_VERSION: "2.6.6"
-      PYTHON_ARCH: "64"
-
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.0"
-      PYTHON_ARCH: "32"
-
-    - PYTHON: "C:\\Python35-x64"
-      PYTHON_VERSION: "3.5.0"
-      PYTHON_ARCH: "64"
+    - PYTHON: C:\Python3t-x64
+      PYTHON_VERSION: 3.5.x
+      PYTHON_ARCH: '64'
 
     # Major and minor releases (i.e x.0.0 and x.y.0) prior to 3.3.0 use
     # a different naming scheme.
