@@ -72,7 +72,7 @@ install:
   - ECHO "Installed SDKs:"
   - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
 
-  # Install Python (from the official .msi of http://python.org) and pip when
+  # Install Python (from the official .msi of https://python.org) and pip when
   # not already installed.
   - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
 
@@ -100,9 +100,12 @@ build_script:
   - "%CMD_IN_ENV% python setup.py build"
 
 test_script:
-  # Run the project tests
-  - "%CMD_IN_ENV% python setup.py nosetests"
-
+  # Run the project tests and store results in .xml log
+  - ps: |
+      # this produces nosetests.xml which is uploaded on_finish
+      &$env:PYTHON\python setup.py nosetests --with-xunit
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      
 after_test:
   # If tests are successful, create binary packages for the project.
   - "%CMD_IN_ENV% python setup.py bdist_wheel"
@@ -117,3 +120,10 @@ artifacts:
 #on_success:
 #  - TODO: upload the content of dist/*.whl to a public wheelhouse
 #
+
+on_finish:
+  # Upload test results to AppVeyor
+  - ps: |
+      # this uploads nosetests.xml produced in test_script step
+      $wc = New-Object 'System.Net.WebClient'
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nosetests.xml))
