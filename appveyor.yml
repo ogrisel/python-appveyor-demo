@@ -1,3 +1,7 @@
+# https://www.appveyor.com/docs/windows-images-software
+
+image: Visual Studio 2022
+
 environment:
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
@@ -86,6 +90,11 @@ environment:
       PYTHON_ARCH: "64"
 
 install:
+  - where python
+  - where py  # On Windows, py might be a better way to find and run CPython
+  - py --list  # py run -3.10-32, -3.10-64 with same syntax for 3.{9-3}, 2.{7,6}
+  - where conda || true
+
   # If there is a newer build queued for the same PR, cancel this one.
   # The AppVeyor 'rollout builds' option is supposed to serve the same
   # purpose but it is problematic because it tends to cancel builds pushed
