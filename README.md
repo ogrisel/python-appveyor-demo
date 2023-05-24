@@ -90,8 +90,8 @@ Thanks to Thomas Conté (@tomconte) from Microsoft for your help in scripting
 Windows SDKs and MSVC build environments usage.
 
 
-Licening
---------
+License
+-------
 
 The source code in this repo is either licensed under CC0 (see `LICENSE`) or
 the following MIT license at your choice:
